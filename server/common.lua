@@ -5,8 +5,6 @@ ESX.Items = {}
 ESX.ServerCallbacks = {}
 ESX.TimeoutCount = -1
 ESX.CancelledTimeouts = {}
-ESX.Pickups = {}
-ESX.PickupId = 0
 ESX.Jobs = {}
 ESX.RegisteredCommands = {}
 
@@ -18,18 +16,11 @@ function getSharedObject()
 	return ESX
 end
 
-MySQL.ready(function()
-	MySQL.Async.fetchAll('SELECT * FROM items', {}, function(result)
-		for k,v in ipairs(result) do
-			ESX.Items[v.name] = {
-				label = v.label,
-				weight = v.weight,
-				rare = v.rare,
-				canRemove = v.can_remove
-			}
-		end
-	end)
+AddEventHandler('linden_inventory:loaded', function(data)
+	ESX.Items = data
+end)
 
+MySQL.ready(function()
 	local Jobs = {}
 	MySQL.Async.fetchAll('SELECT * FROM jobs', {}, function(jobs)
 		for k,v in ipairs(jobs) do
