@@ -1,24 +1,35 @@
-local isDead = false
-SetInterval('death', 100, function()
-	local playerPed = PlayerPedId()
-	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
+Citizen.CreateThread(function()
+	local isDead = false
 
-	if not isDead and IsPedFatallyInjured(playerPed) then
-		isDead = true
+	while true do
+		Citizen.Wait(0)
+		local letSleep = 0
+		local player = PlayerId()
 
-		local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)
-		local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
+		if NetworkIsPlayerActive(player) then
+			local playerPed = PlayerPedId()
 
-		if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then
-			PlayerKilledByPlayer(GetPlayerServerId(killerClientId), killerClientId, deathCause)
-		else
-			PlayerKilled(deathCause)
+			if IsPedFatallyInjured(playerPed) and not isDead then
+				letSleep = false
+				isDead = true
+
+				local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)
+				local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
+
+				if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then
+					PlayerKilledByPlayer(GetPlayerServerId(killerClientId), killerClientId, deathCause)
+				else
+					PlayerKilled(deathCause)
+				end
+
+			elseif not IsPedFatallyInjured(playerPed) and isDead then
+				letSleep = false
+				isDead = false
+			end
 		end
-
-	elseif isDead and not IsPedFatallyInjured(playerPed) then
-		isDead = false
-	else
-		Citizen.Wait(400)
+		if letSleep then
+			Citizen.Wait(500)
+		end
 	end
 end)
 
