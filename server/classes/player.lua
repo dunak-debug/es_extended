@@ -250,7 +250,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 			self.setAccountMoney('money', money)
 		end
 		if curDirty ~= dirty then
-			self.setAccountMoney('black_money', money)
+			self.setAccountMoney('black_money', dirty)
 		end
 		self.inventory = inventory
 		self.weight = weight
