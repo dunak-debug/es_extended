@@ -1,3 +1,6 @@
+<h2 align='center'>This is an <i>unofficial</i> fork of ESX Legacy</h2><h5 align='center'>Features have been removed and altered to add support for <a href='https://github.com/thelindat/linden_inventory/'>my inventory</a>. Do not use this framework standalone.</h5><br><br>
+
+
 <h1 align='center'>ESX Legacy</a></h1><p align='center'><b><a href='https://discord.gg/cNx6HF9P5J'>Development Discord</a> - <a href='https://esx-framework.org/esx'>Website</a> - <a href='https://discord.gg/J6VqFPwvVp'>Support Discord</a></b></h5>
 
 
