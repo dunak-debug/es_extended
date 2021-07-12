@@ -20,6 +20,12 @@ AddEventHandler('linden_inventory:loaded', function(data)
 	ESX.Items = data
 end)
 
+local StartDBSync = function()
+	SetInterval('save', 10 * 60 * 1000, function()
+		ESX.SavePlayers()
+	end)
+end
+
 MySQL.ready(function()
 	local Jobs = {}
 	MySQL.Async.fetchAll('SELECT * FROM jobs', {}, function(jobs)
@@ -45,8 +51,8 @@ MySQL.ready(function()
 			end
 			ESX.Jobs = Jobs
 			print('[^2INFO^7] ESX ^5Legacy^0 initialized')
-			ESX.StartDBSync()
-			ESX.StartPayCheck()
+			StartDBSync()
+			StartPayCheck()
 		end)
 	end)
 end)

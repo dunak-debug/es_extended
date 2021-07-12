@@ -237,12 +237,6 @@ ESX.SavePlayers = function(cb)
 	end
 end
 
-ESX.StartDBSync = function()
-	SetInterval('save', 10 * 60 * 1000, function()
-		ESX.SavePlayers()
-	end)
-end
-
 ESX.GetPlayers = function()
 	local sources = {}
 

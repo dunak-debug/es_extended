@@ -1,4 +1,4 @@
-ESX.StartPayCheck = function()
+StartPayCheck = function()
 	SetInterval('pay', Config.PaycheckInterval, function()
 		local xPlayers = ESX.GetPlayers()
 		for i=1, #xPlayers, 1 do
