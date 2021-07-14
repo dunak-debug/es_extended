@@ -1,5 +1,5 @@
 {
 	"version": "linden",
-	"commit" : "1.3.6",
-	"changelog": "\n- Added new xPlayer function to sync inventory, weight, and accounts variables\n- Reverted a change to death module that would not properly trigger\n- Dirty money will no longer get synced to the incorrect amount"
+	"commit" : "1.3.7",
+	"changelog": "\n- Requires linden_inventory 1.8.3\n- Removed callback from setPlayerInventory and trigger it after the player is loaded\n- Triggering xPlayer.getInventory(minimal) will retrieve xPlayer.inventory instead\n- Resolved data loss if inventory restarts during save"
 }
