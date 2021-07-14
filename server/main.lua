@@ -231,25 +231,22 @@ function loadESXPlayer(identifier, playerId, isNew)
 			if userData.sex then xPlayer.set('sex', userData.sex) end
 			if userData.height then xPlayer.set('height', userData.height) end
 		end
-		TriggerEvent('linden_inventory:setPlayerInventory', xPlayer, userData.inventory, function(cb)
-			if cb then
-				TriggerEvent('esx:playerLoaded', playerId, xPlayer, isNew)
+		TriggerEvent('esx:playerLoaded', playerId, xPlayer, isNew)
 
-				xPlayer.triggerEvent('esx:playerLoaded', {
-					accounts = xPlayer.getAccounts(),
-					coords = xPlayer.getCoords(),
-					identifier = xPlayer.getIdentifier(),
-					inventory = xPlayer.getInventory(),
-					job = xPlayer.getJob(),
-					loadout = {},
-					money = xPlayer.getMoney(),
-					dead = false
-				}, isNew, userData.skin)
+		xPlayer.triggerEvent('esx:playerLoaded', {
+			accounts = xPlayer.getAccounts(),
+			coords = xPlayer.getCoords(),
+			identifier = xPlayer.getIdentifier(),
+			inventory = xPlayer.getInventory(),
+			job = xPlayer.getJob(),
+			loadout = {},
+			money = xPlayer.getMoney(),
+			dead = false
+		}, isNew, userData.skin)
 
-				xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
-				print(('[^2INFO^0] Player ^5"%s" ^0has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
-			end
-		end)
+		TriggerEvent('linden_inventory:setPlayerInventory', xPlayer, userData.inventory)
+		xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
+		print(('[^2INFO^0] Player ^5"%s" ^0has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 	end)
 end
 
