@@ -107,6 +107,22 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 	end
 
 	self.getInventory = function(minimal)
+		if minimal and next(self.inventory) then
+			local inventory = {}
+			for k, v in pairs(self.inventory) do
+				if v.count > 0 then
+					local metadata = v.metadata
+					if v.metadata and next(v.metadata) == nil then metadata = nil end
+					inventory[#inventory+1] = {
+						name = v.name,
+						count = v.count,
+						slot = k,
+						metadata = metadata
+					}
+				end
+			end
+			return inventory
+		end
 		return exports['linden_inventory']:getPlayerInventory(self, minimal)
 	end
 
