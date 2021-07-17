@@ -91,7 +91,6 @@ end)
 RegisterNetEvent('esx:onPlayerLogout')
 AddEventHandler('esx:onPlayerLogout', function()
 	ClearInterval('coords')
-	ClearInterval('death')
 	ESX.PlayerLoaded = false
 	if Config.EnableHud then ESX.UI.HUD.Reset() end
 end)
