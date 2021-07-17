@@ -31,11 +31,22 @@ ClearInterval = function(name)
 	if Intervals[name] then Intervals[name].interval = -1 end
 end
 
-if not IsDuplicityVersion() then -- Only register this event for the client
+------------------------------------------------------------------------
+if IsDuplicityVersion() then
+------------------------------------------------------------------------
+	-- Clear out unneccesary garbage that gets copied over
+	ESX.Items, ESX.ServerCallbacks, ESX.CancelledTimeouts, ESX.Jobs, ESX.RegisteredCommands = nil, nil, nil, nil, nil
+
+------------------------------------------------------------------------
+else -- CLIENT
+------------------------------------------------------------------------
 	AddEventHandler('esx:setPlayerData', function(key, val, last)
 		if GetInvokingResource() == 'es_extended' then
 			ESX.PlayerData[key] = val
 			if OnPlayerData ~= nil then OnPlayerData(key, val, last) end
 		end
 	end)
+	
+------------------------------------------------------------------------
 end
+------------------------------------------------------------------------
