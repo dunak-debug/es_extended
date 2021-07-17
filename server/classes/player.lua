@@ -277,5 +277,10 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 		return exports['linden_inventory']:getPlayerSlot(self, slot)
 	end
 
+	self.getLoadout = function()
+		print('loadouts don\'t exist')
+		return {}
+	end
+
 	return self
 end
