@@ -35,7 +35,8 @@ end
 if IsDuplicityVersion() then
 ------------------------------------------------------------------------
 	-- Clear out unneccesary garbage that gets copied over
-	ESX.Items, ESX.ServerCallbacks, ESX.CancelledTimeouts, ESX.Jobs, ESX.RegisteredCommands = nil, nil, nil, nil, nil
+	ESX.Items, ESX.Jobs, ESX.UsableItemsCallbacks = {}, {}, {}
+	ESX.ServerCallbacks, ESX.CancelledTimeouts, ESX.RegisteredCommands = nil, nil, nil
 
 ------------------------------------------------------------------------
 else -- CLIENT
