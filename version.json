@@ -1,5 +1,5 @@
 {
 	"version": "linden",
-	"commit" : "1.3.7",
-	"changelog": "\n- Requires linden_inventory 1.8.3\n- Removed callback from setPlayerInventory and trigger it after the player is loaded\n- Triggering xPlayer.getInventory(minimal) will retrieve xPlayer.inventory instead\n- Resolved data loss if inventory restarts during save"
+	"commit" : "1.3.8",
+	"changelog": "\n- Support for latest inventory updates\n- Interval functions included by default\n- Imports will clear garbage variables after retrieving ESX object\n Print an error message when using xPlayer.getLoadout()"
 }
