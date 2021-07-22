@@ -96,20 +96,17 @@ AddEventHandler('esx:onPlayerLogout', function()
 end)
 
 AddEventHandler('esx:onPlayerSpawn', function()
-	local playerPed = PlayerPedId()
-	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
-	if ESX.PlayerData.dead ~= false then ESX.SetPlayerData('dead', false) end
+	ESX.SetPlayerData('ped', PlayerPedId())
+	ESX.SetPlayerData('dead', false)
 end)
 
 AddEventHandler('esx:onPlayerDeath', function()
-	local playerPed = PlayerPedId()
-	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
-	if ESX.PlayerData.dead ~= false then ESX.SetPlayerData('dead', true) end
+	ESX.SetPlayerData('ped', PlayerPedId())
+	ESX.SetPlayerData('dead', true)
 end)
 
 AddEventHandler('esx:restoreLoadout', function()
-	local playerPed = PlayerPedId()
-	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
+	ESX.SetPlayerData('ped', PlayerPedId())
 end)
 
 RegisterNetEvent('esx:setAccountMoney')
