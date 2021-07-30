@@ -40,6 +40,7 @@ ESX.GetPlayerData = function()
 	return ESX.PlayerData
 end
 
+local SetStates = {dead=true, cuffed=true, handsup=true, busy=true}
 ESX.SetPlayerData = function(key, val)
 	local current = ESX.PlayerData[key]
 	ESX.PlayerData[key] = val
@@ -48,6 +49,14 @@ ESX.SetPlayerData = function(key, val)
 			TriggerEvent('esx:setPlayerData', key, val, current)
 		end
 	end
+
+	if SetStates[key] then
+		LocalPlayer.state:set(key, val, true)
+	end
+end
+
+ESX.PlayerId = function(entity)
+	return GetPlayerServerId(NetworkGetPlayerIndexFromPed(entity))
 end
 
 ESX.ShowNotification = function(msg)
@@ -359,7 +368,7 @@ ESX.Game.DeleteObject = function(object)
 end
 
 ESX.Game.SpawnVehicle = function(vehicle, coords, heading, cb, networked)
-	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
+	local model = type(vehicle) == 'number' and vehicle or GetHashKey(vehicle)
 	local vector = type(coords) == "vector3" and coords or vec(coords.x, coords.y, coords.z)
 	networked = networked == nil and true or networked
 	Citizen.CreateThread(function()
@@ -771,20 +780,16 @@ AddEventHandler('esx:showHelpNotification', function(msg, thisFrame, beep, durat
 	ESX.ShowHelpNotification(msg, thisFrame, beep, duration)
 end)
 
--- SetTimeout
-Citizen.CreateThread(function()
-	while true do
-		local sleep = 100
-		if #ESX.TimeoutCallbacks > 0 then
-			local currTime = GetGameTimer()
-			sleep = 0
-			for i=1, #ESX.TimeoutCallbacks, 1 do
-				if currTime >= ESX.TimeoutCallbacks[i].time then
-					ESX.TimeoutCallbacks[i].cb()
-					ESX.TimeoutCallbacks[i] = nil
-				end
+SetInterval(2, 100, function()
+	if #ESX.TimeoutCallbacks > 0 then
+		SetInterval(2, 5)
+		local currTime = GetGameTimer()
+		for i=1, #ESX.TimeoutCallbacks, 1 do
+			if currTime >= ESX.TimeoutCallbacks[i].time then
+				ESX.TimeoutCallbacks[i].cb()
+				ESX.TimeoutCallbacks[i] = nil
 			end
 		end
-		Citizen.Wait(sleep)
+		if #ESX.TimeoutCallbacks == 0 then SetInterval(2, 100) end
 	end
 end)

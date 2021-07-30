@@ -1,6 +1,6 @@
 fx_version 'adamant'
-
 game 'gta5'
+lua54 'yes'
 
 description 'ES Extended'
 
@@ -8,24 +8,14 @@ version 'legacy'
 
 shared_scripts {
 	'locale.lua',
-	'locales/de.lua',
-	'locales/br.lua',
-	'locales/fr.lua',
 	'locales/en.lua',
-	'locales/fi.lua',
-	'locales/sv.lua',
-	'locales/pl.lua',
-	'locales/cs.lua',
-	'locales/sc.lua',
-	'locales/tc.lua',
-
 	'config.lua',
 	'config.weapons.lua',
+	'common/interval.lua'
 }
 
 server_scripts {
 	'@async/async.lua',
-	'@mysql-async/lib/MySQL.lua',
 
 	'server/common.lua',
 	'server/classes/player.lua',
@@ -37,7 +27,6 @@ server_scripts {
 	'common/modules/math.lua',
 	'common/modules/table.lua',
 	'common/functions.lua',
-	'common/interval.lua'
 }
 
 client_scripts {
@@ -53,7 +42,6 @@ client_scripts {
 	'common/modules/math.lua',
 	'common/modules/table.lua',
 	'common/functions.lua',
-	'common/interval.lua'
 }
 
 ui_page {

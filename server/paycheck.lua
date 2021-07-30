@@ -1,7 +1,6 @@
-StartPayCheck = function()
+Core.StartPayCheck = function()
 	SetInterval('pay', Config.PaycheckInterval, function()
-		local xPlayers = ESX.GetExtendedPlayers()
-		for _,xPlayer in pairs(xPlayers) do
+		for _, xPlayer in pairs(ESX.GetExtendedPlayers()) do
 			local job     = xPlayer.job.grade_name
 			local salary  = xPlayer.job.grade_salary
 	

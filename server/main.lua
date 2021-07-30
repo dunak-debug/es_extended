@@ -9,16 +9,16 @@ Citizen.CreateThread(function()
 	end
 
 	if Config.Multichar then -- insert identity data with creation
-		MySQL.Async.store("INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?, `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?", function(storeId)
+		exports.ghmattimysql:store("INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?, `firstname` = ?, `lastname` = ?, `dateofbirth` = ?, `sex` = ?, `height` = ?", function(storeId)
 			NewPlayer = storeId
 		end)
 	else
-		MySQL.Async.store("INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?", function(storeId)
+		exports.ghmattimysql:store("INSERT INTO `users` SET `accounts` = ?, `identifier` = ?, `group` = ?", function(storeId)
 			NewPlayer = storeId
 		end)
 	end
 
-	MySQL.Async.store("SELECT "..query.." FROM `users` WHERE identifier = ?", function(storeId)
+	exports.ghmattimysql:store("SELECT "..query.." FROM `users` WHERE identifier = ?", function(storeId)
 		LoadPlayer = storeId
 	end)
 end)
@@ -49,7 +49,7 @@ function onPlayerJoined(playerId)
 		if ESX.GetPlayerFromIdentifier(identifier) then
 			DropPlayer(playerId, ('there was an error loading your character!\nError code: identifier-active-ingame\n\nThis error is caused by a player on this server who has the same identifier as you have. Make sure you are not playing on the same Rockstar account.\n\nYour Rockstar identifier: %s'):format(identifier))
 		else
-			MySQL.Async.fetchScalar('SELECT 1 FROM users WHERE identifier = @identifier', {
+			exports.ghmattimysql:scalar('SELECT 1 FROM users WHERE identifier = @identifier', {
 				['@identifier'] = identifier
 			}, function(result)
 				if result then
@@ -77,15 +77,15 @@ function createESXPlayer(identifier, playerId, data)
 	end
 
 	if not Config.Multichar then
-		MySQL.Async.execute(NewPlayer, {
+		exports.ghmattimysql:execute(NewPlayer, {
 				json.encode(accounts),
 				identifier,
 				defaultGroup,
-		}, function(rowsChanged)
+		}, function(result)
 			loadESXPlayer(identifier, playerId, true)
 		end)
 	else
-		MySQL.Async.execute(NewPlayer, {
+		exports.ghmattimysql:execute(NewPlayer, {
 				json.encode(accounts),
 				identifier,
 				defaultGroup,
@@ -94,7 +94,7 @@ function createESXPlayer(identifier, playerId, data)
 				data.dateofbirth,
 				data.sex,
 				data.height,
-		}, function(rowsChanged)
+		}, function(result)
 			loadESXPlayer(identifier, playerId, true)
 		end)
 	end
@@ -124,14 +124,15 @@ function loadESXPlayer(identifier, playerId, isNew)
 		accounts = {},
 		inventory = {},
 		job = {},
-		loadout = {},
 		playerName = GetPlayerName(playerId),
 	}
 
 	table.insert(tasks, function(cb)
-		MySQL.Async.fetchAll(LoadPlayer, { identifier
+		exports.ghmattimysql:execute(LoadPlayer, { identifier
 		}, function(result)
-			local job, grade, jobObject, gradeObject = result[1].job, tostring(result[1].job_grade)
+			local Player = Player(playerId).state
+			
+			local job, grade, jobObject, gradeObject = result[1].job, result[1].job_grade
 			local foundAccounts, foundItems = {}, {}
 
 			-- Accounts
@@ -156,7 +157,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 				jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 			else
 				print(('[^3WARNING^7] Ignoring invalid job for %s [job: %s, grade: %s]'):format(identifier, job, grade))
-				job, grade = 'unemployed', '0'
+				job, grade = 'unemployed', 1
 				jobObject, gradeObject = ESX.Jobs[job], ESX.Jobs[job].grades[grade]
 			end
 
@@ -216,6 +217,18 @@ function loadESXPlayer(identifier, playerId, isNew)
 				if result[1].height then userData.height = result[1].height end
 			end
 
+			-- Statebags
+			Player.firstName = userData.firstname
+			Player.lastName = userData.lastname
+			Player.job = jobObject.label
+			Player.grade = gradeObject.label
+			Player.cuffed = false
+			Player.handsup = false
+			Player.escorted = false
+			Player.busy = false
+			Player.duty = false
+			Player.dead = false
+
 			cb()
 		end)
 	end)
@@ -239,7 +252,6 @@ function loadESXPlayer(identifier, playerId, isNew)
 			identifier = xPlayer.getIdentifier(),
 			inventory = xPlayer.getInventory(),
 			job = xPlayer.getJob(),
-			loadout = {},
 			money = xPlayer.getMoney(),
 			dead = false
 		}, isNew, userData.skin)
@@ -302,7 +314,6 @@ ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
 		accounts     = xPlayer.getAccounts(),
 		inventory    = xPlayer.getInventory(),
 		job          = xPlayer.getJob(),
-		loadout      = {},
 		money        = xPlayer.getMoney()
 	})
 end)
@@ -315,7 +326,6 @@ ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target
 		accounts     = xPlayer.getAccounts(),
 		inventory    = xPlayer.getInventory(),
 		job          = xPlayer.getJob(),
-		loadout      = {},
 		money        = xPlayer.getMoney()
 	})
 end)
@@ -352,7 +362,7 @@ Citizen.CreateThread(
 		if vRaw then
 			local v = json.decode(vRaw)
 			PerformHttpRequest(
-				'https://raw.githubusercontent.com/thelindat/es_extended/linden/version.json',
+				'https://raw.githubusercontent.com/overextended/es_extended/main/version.json',
 				function(code, res, headers)
 					if code == 200 then
 						local rv = json.decode(res)
@@ -364,7 +374,7 @@ Citizen.CreateThread(
 ^1----------------------------------------------------------------------
 ^1URGENT: YOUR ES_EXTENDED IS OUTDATED!
 ^1COMMIT UPDATE: ^5%s AVAILABLE
-^1DOWNLOAD:^5 https://github.com/thelindat/es_extended
+^1DOWNLOAD:^5 https://github.com/overextended/es_extended
 ^1CHANGELOG:^5 %s
 ^1-----------------------------------------------------------------------
 ^0]]):format(
@@ -395,7 +405,7 @@ Citizen.CreateThread(
 ^1----------------------------------------------------------------------
 ^1URGENT: YOUR ES_EXTENDED IS OUTDATED!!!
 ^1COMMIT UPDATE: ^5%s AVAILABLE
-^1DOWNLOAD:^5 https://github.com/thelindat/es_extended
+^1DOWNLOAD:^5 https://github.com/overextended/es_extended
 ^1CHANGELOG:^5 %s
 ^1-----------------------------------------------------------------------
 ^0]]):format(

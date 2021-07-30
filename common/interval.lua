@@ -1,6 +1,9 @@
 ---------------------------------------------
 -- Internal Use
 ---------------------------------------------
+local CreateThread = CreateThread
+local Wait = Wait
+
 local Intervals = {}
 local CreateInterval = function(name, interval, action, clear)
 	local self = {interval = interval}
@@ -8,7 +11,7 @@ local CreateInterval = function(name, interval, action, clear)
 		local name, action, clear = name, action, clear
 		repeat
 			action()
-			Citizen.Wait(self.interval)
+			Wait(self.interval)
 		until self.interval == -1
 		if clear then clear() end
 		Intervals[name] = nil

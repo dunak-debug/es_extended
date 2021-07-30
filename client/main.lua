@@ -71,26 +71,24 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	end
 	
 	local previousCoords = vector3(ESX.PlayerData.coords.x, ESX.PlayerData.coords.y, ESX.PlayerData.coords.z)
-	SetInterval('coords', 2000, function()
-		local playerPed = PlayerPedId()
-		if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
-	
-		if DoesEntityExist(playerPed) then
-			local playerCoords = GetEntityCoords(playerPed)
-			local distance = #(playerCoords - previousCoords)
-			if distance > 2 then
-				previousCoords = playerCoords
-				local playerHeading = ESX.Math.Round(GetEntityHeading(playerPed), 1)
-				local formattedCoords = {x = ESX.Math.Round(playerCoords.x, 1), y = ESX.Math.Round(playerCoords.y, 1), z = ESX.Math.Round(playerCoords.z, 1), heading = playerHeading}
-				TriggerServerEvent('esx:updateCoords', formattedCoords)
-			end
+	SetInterval(1, 2000, function()
+		local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
+		local distance = #(playerCoords - previousCoords)
+		if distance > 4 then
+			previousCoords = playerCoords
+			TriggerServerEvent('esx:updateCoords', {
+				x = ESX.Math.Round(playerCoords.x, 1),
+				y = ESX.Math.Round(playerCoords.y, 1),
+				z = ESX.Math.Round(playerCoords.z, 1),
+				heading = ESX.Math.Round(GetEntityHeading(ESX.PlayerData.ped), 1)
+			})
 		end
 	end)
 end)
 
 RegisterNetEvent('esx:onPlayerLogout')
 AddEventHandler('esx:onPlayerLogout', function()
-	ClearInterval('coords')
+	ClearInterval(1)
 	ESX.PlayerLoaded = false
 	if Config.EnableHud then ESX.UI.HUD.Reset() end
 end)
@@ -146,11 +144,12 @@ end)
 
 RegisterNetEvent('esx:spawnVehicle')
 AddEventHandler('esx:spawnVehicle', function(vehicle)
-	local model = (type(vehicle) == 'number' and vehicle or GetHashKey(vehicle))
+	local model = type(vehicle) == 'number' and vehicle or GetHashKey(vehicle)
 
 	if IsModelInCdimage(model) then
 		local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
 
+		TriggerEvent('esx:deleteVehicle')
 		ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
 			TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
 		end)

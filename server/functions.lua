@@ -164,37 +164,26 @@ ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
 end
 
 local savePlayers = -1
-Citizen.CreateThread(function()
-	savePlayers = MySQL.Sync.store("UPDATE users SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position` = ?, `inventory` = ? WHERE `identifier` = ?")
+exports.ghmattimysql:store("UPDATE users SET `accounts` = ?, `job` = ?, `job_grade` = ?, `group` = ?, `position`= ?, `inventory` = ? WHERE `identifier` = ?", function(storeId)
+	savePlayers = storeId
 end)
 
 ESX.SavePlayer = function(xPlayer, cb)
-	local asyncTasks = {}
-
-	table.insert(asyncTasks, function(cb2)
-		MySQL.Async.execute(savePlayers, {
-			json.encode(xPlayer.getAccounts(true)),
-			xPlayer.job.name,
-			xPlayer.job.grade,
-			xPlayer.getGroup(),
-			json.encode(xPlayer.getCoords()),
-			json.encode(xPlayer.getInventory(true)),
-			xPlayer.identifier
-		}, function(rowsChanged)
-			cb2()
-		end)
-	end)
-
-	Async.parallel(asyncTasks, function(results)
-		print(('[^2INFO^7] Saved player ^5"%s^7"'):format(xPlayer.getName()))
-
-		if cb then
-			cb()
-		end
+	exports.ghmattimysql:execute(savePlayers, {
+		json.encode(xPlayer.getAccounts(true)),
+		xPlayer.job.name,
+		xPlayer.job.grade,
+		xPlayer.group,
+		json.encode(xPlayer.getCoords()),
+		json.encode(xPlayer.getInventory(true)),
+		xPlayer.identifier
+	}, function(result)
+		print(('[^2INFO^7] Saved player ^5"%s^7"'):format(xPlayer.name))
+		if cb then cb() end
 	end)
 end
 
-ESX.SavePlayers = function(cb)
+Core.SavePlayers = function(cb)
 	local xPlayers = ESX.GetExtendedPlayers()
 	if #xPlayers > 0 then
 		local time = os.time()
@@ -228,7 +217,7 @@ ESX.SavePlayers = function(cb)
 
 		updateCommand = updateCommand .. ' ) vals ON u.identifier = vals.identifier SET accounts = new_accounts, job = new_job, job_grade = new_job_grade, `group` = new_group, `position` = new_position, inventory = new_inventory'
 
-		MySQL.Async.fetchAll(updateCommand, {},
+		exports.ghmattimysql:execute(updateCommand, {},
 		function(result)
 			if result then
 				if cb then cb() else print(('[^2INFO^7] Saved %s of %s player(s) over %s seconds'):format(result.affectedRows, #xPlayers, os.time() - time)) end
@@ -276,8 +265,7 @@ end
 ESX.GetIdentifier = function(playerId)
 	for k,v in ipairs(GetPlayerIdentifiers(playerId)) do
 		if string.match(v, 'license:') then
-			local identifier = string.gsub(v, 'license:', '')
-			return identifier
+			return string.gsub(v, 'license:', '')
 		end
 	end
 end
@@ -297,7 +285,7 @@ ESX.GetItemLabel = function(item)
 end
 
 ESX.DoesJobExist = function(job, grade)
-	grade = tostring(grade)
+	grade = grade
 
 	if job and grade then
 		if ESX.Jobs[job] and ESX.Jobs[job].grades[grade] then

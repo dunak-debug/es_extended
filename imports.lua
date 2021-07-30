@@ -41,12 +41,21 @@ if IsDuplicityVersion() then
 ------------------------------------------------------------------------
 else -- CLIENT
 ------------------------------------------------------------------------
+	ESX.UI.Opened, ESX.UI.RegisteredTypes, ESX.ServerCallbacks, ESX.TimeoutCallbacks = nil, nil, nil, nil
+	ESX.PlayerData.inventory, ESX.PlayerData.loadout = {}, {}
+
 	AddEventHandler('esx:setPlayerData', function(key, val, last)
 		if GetInvokingResource() == 'es_extended' then
 			ESX.PlayerData[key] = val
 			if OnPlayerData ~= nil then OnPlayerData(key, val, last) end
 		end
 	end)
+
+	ESX.CanPerformAction = function()
+		if ESX.PlayerData.cuffed or ESX.PlayerData.dead or ESX.PlayerData.handsup or ESX.PlayerData.busy then
+			return false
+		else return true end
+	end
 	
 ------------------------------------------------------------------------
 end

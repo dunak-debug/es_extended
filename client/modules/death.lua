@@ -1,39 +1,4 @@
-Citizen.CreateThread(function()
-	local isDead = false
-
-	while true do
-		Citizen.Wait(0)
-		local letSleep = 0
-		local player = PlayerId()
-
-		if NetworkIsPlayerActive(player) then
-			local playerPed = PlayerPedId()
-
-			if IsPedFatallyInjured(playerPed) and not isDead then
-				letSleep = false
-				isDead = true
-
-				local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)
-				local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
-
-				if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then
-					PlayerKilledByPlayer(GetPlayerServerId(killerClientId), killerClientId, deathCause)
-				else
-					PlayerKilled(deathCause)
-				end
-
-			elseif not IsPedFatallyInjured(playerPed) and isDead then
-				letSleep = false
-				isDead = false
-			end
-		end
-		if letSleep then
-			Citizen.Wait(500)
-		end
-	end
-end)
-
-function PlayerKilledByPlayer(killerServerId, killerClientId, deathCause)
+local PlayerKilledByPlayer = function(killerServerId, killerClientId, deathCause)
 	local victimCoords = GetEntityCoords(PlayerPedId())
 	local killerCoords = GetEntityCoords(GetPlayerPed(killerClientId))
 	local distance = #(victimCoords - killerCoords)
@@ -54,7 +19,7 @@ function PlayerKilledByPlayer(killerServerId, killerClientId, deathCause)
 	TriggerServerEvent('esx:onPlayerDeath', data)
 end
 
-function PlayerKilled(deathCause)
+local PlayerKilled = function(deathCause)
 	local playerPed = PlayerPedId()
 	local victimCoords = GetEntityCoords(playerPed)
 
@@ -68,3 +33,25 @@ function PlayerKilled(deathCause)
 	TriggerEvent('esx:onPlayerDeath', data)
 	TriggerServerEvent('esx:onPlayerDeath', data)
 end
+
+local isDead = false
+SetInterval(3, 500, function()
+	local playerPed = PlayerPedId()
+	if ESX.PlayerData.ped ~= playerPed then ESX.SetPlayerData('ped', playerPed) end
+
+	if not isDead and IsPedFatallyInjured(playerPed) then
+		isDead = true
+
+		local killerEntity, deathCause = GetPedSourceOfDeath(playerPed), GetPedCauseOfDeath(playerPed)
+		local killerClientId = NetworkGetPlayerIndexFromPed(killerEntity)
+
+		if killerEntity ~= playerPed and killerClientId and NetworkIsPlayerActive(killerClientId) then
+			PlayerKilledByPlayer(GetPlayerServerId(killerClientId), killerClientId, deathCause)
+		else
+			PlayerKilled(deathCause)
+		end
+
+	elseif isDead and not IsPedFatallyInjured(playerPed) then
+		isDead = false
+	end
+end)

@@ -16,10 +16,7 @@ ESX.Math.GroupDigits = function(value)
 	return left..(num:reverse():gsub('(%d%d%d)','%1' .. _U('locale_digit_grouping_symbol')):reverse())..right
 end
 
-ESX.Math.Trim = function(value)
-	if value then
-		return (string.gsub(value, "^%s*(.-)%s*$", "%1"))
-	else
-		return nil
-	end
+ESX.Math.Trim = function(string)
+	if string then return string:match("^%s*(.-)%s*$")
+	else return nil end
 end

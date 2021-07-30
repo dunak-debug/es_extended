@@ -7,7 +7,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 	self.identifier = identifier
 	self.inventory = {}
 	self.job = job
-	self.loadout = {}
 	self.name = name
 	self.playerId = playerId
 	self.source = playerId
@@ -215,7 +214,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 	end
 
 	self.setJob = function(job, grade)
-		grade = tostring(grade)
 		local lastJob = json.decode(json.encode(self.job))
 
 		if ESX.DoesJobExist(job, grade) then
@@ -275,11 +273,6 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
   
 	self.getPlayerSlot = function(slot)
 		return exports['linden_inventory']:getPlayerSlot(self, slot)
-	end
-
-	self.getLoadout = function()
-		print('loadouts don\'t exist')
-		return {}
 	end
 
 	return self
