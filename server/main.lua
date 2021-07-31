@@ -2,7 +2,7 @@ local NewPlayer, LoadPlayer = -1, -1
 Citizen.CreateThread(function()
 	SetMapName('San Andreas')
 	SetGameType('ESX Legacy')
-	
+
 	local query = '`accounts`, `job`, `job_grade`, `group`, `position`, `inventory`, `skin`' -- Select these fields from the database
 	if Config.Multichar or Config.Identity then	-- append these fields to the select query
 		query = query..', `firstname`, `lastname`, `dateofbirth`, `sex`, `height`'
@@ -131,7 +131,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 		exports.ghmattimysql:execute(LoadPlayer, { identifier
 		}, function(result)
 			local Player = Player(playerId).state
-			
+
 			local job, grade, jobObject, gradeObject = result[1].job, result[1].job_grade
 			local foundAccounts, foundItems = {}, {}
 
@@ -237,7 +237,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 		local xPlayer = CreateExtendedPlayer(playerId, identifier, userData.group, userData.accounts, userData.job, userData.playerName, userData.coords)
 		ESX.Players[playerId] = xPlayer
 
-		if userData.firstname then 
+		if userData.firstname then
 			xPlayer.set('firstName', userData.firstname)
 			xPlayer.set('lastName', userData.lastname)
 			if userData.dateofbirth then xPlayer.set('dateofbirth', userData.dateofbirth) end
@@ -350,9 +350,15 @@ AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
 	if eventData.secondsRemaining == 60 then
 		Citizen.CreateThread(function()
 			Citizen.Wait(50000)
-			ESX.SavePlayers()
+			Core.SavePlayers()
 		end)
 	end
+end)
+
+print('[^2INFO^7] ESX ^5Legacy^0 initialized')
+Core.StartPayCheck()
+SetInterval('save', 900000, function() -- 15 minutes
+	Core.SavePlayers(true)
 end)
 
 -- version check
@@ -367,7 +373,7 @@ Citizen.CreateThread(
 					if code == 200 then
 						local rv = json.decode(res)
 						if rv.version == v.version then
-							if rv.commit ~= v.commit then 
+							if rv.commit ~= v.commit then
 							print(
 								([[
 

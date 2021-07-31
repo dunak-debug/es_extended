@@ -33,8 +33,6 @@ AddEventHandler('esx:triggerServerCallback', function(name, requestId, ...)
 	end, ...)
 end)
 
-
-
 AddEventHandler('linden_inventory:loaded', function(data)
 	ESX.Items = data
 end)
@@ -62,9 +60,3 @@ Core.LoadJobs = function()
 end
 
 Core.LoadJobs()
-Core.StartPayCheck()
-print('[^2INFO^7] ESX ^5Legacy^0 initialized')
-
-SetInterval('save', 900000, function() -- 15 minutes
-	ESX.SavePlayers(true)
-end)
