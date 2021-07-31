@@ -211,7 +211,7 @@ Core.SavePlayers = function(cb)
 				json.encode(xPlayer.getCoords()),
 				json.encode(xPlayer.getInventory(true))
 			)
-	
+
 			first = false
 		end
 

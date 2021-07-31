@@ -358,7 +358,7 @@ end)
 print('[^2INFO^7] ESX ^5Legacy^0 initialized')
 Core.StartPayCheck()
 SetInterval('save', 900000, function() -- 15 minutes
-	Core.SavePlayers(true)
+	Core.SavePlayers()
 end)
 
 -- version check
