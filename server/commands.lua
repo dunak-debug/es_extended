@@ -56,7 +56,7 @@ end, true, {help = _U('command_save'), validate = true, arguments = {
 }})
 
 ESX.RegisterCommand('saveall', 'admin', function(xPlayer, args, showError)
-	ESX.SavePlayers()
+	Core.SavePlayers()
 end, true, {help = _U('command_saveall')})
 
 ESX.RegisterCommand('group', {"user", "admin"}, function(xPlayer, args, showError)
