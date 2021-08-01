@@ -1,5 +1,5 @@
 local NewPlayer, LoadPlayer = -1, -1
-Citizen.CreateThread(function()
+CreateThread(function()
 	SetMapName('San Andreas')
 	SetGameType('ESX Legacy')
 
@@ -104,7 +104,7 @@ AddEventHandler('playerConnecting', function(name, setCallback, deferrals)
 	deferrals.defer()
 	local playerId = source
 	local identifier = ESX.GetIdentifier(playerId)
-	Citizen.Wait(100)
+	Wait(100)
 
 	if identifier then
 		if ESX.GetPlayerFromIdentifier(identifier) then
@@ -257,7 +257,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 		}, isNew, userData.skin)
 
 		TriggerEvent('linden_inventory:setPlayerInventory', xPlayer, userData.inventory)
-		xPlayer.triggerEvent('esx:registerSuggestions', ESX.RegisteredCommands)
+		xPlayer.triggerEvent('esx:registerSuggestions', Core.RegisteredCommands)
 		print(('[^2INFO^0] Player ^5"%s" ^0has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 	end)
 end
@@ -348,8 +348,8 @@ end)
 
 AddEventHandler('txAdmin:events:scheduledRestart', function(eventData)
 	if eventData.secondsRemaining == 60 then
-		Citizen.CreateThread(function()
-			Citizen.Wait(50000)
+		CreateThread(function()
+			Wait(50000)
 			Core.SavePlayers()
 		end)
 	end
@@ -362,7 +362,7 @@ SetInterval('save', 900000, function() -- 15 minutes
 end)
 
 -- version check
-Citizen.CreateThread(
+CreateThread(
 	function()
 		local vRaw = LoadResourceFile(GetCurrentResourceName(), 'version.json')
 		if vRaw then

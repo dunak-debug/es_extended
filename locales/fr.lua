@@ -61,7 +61,6 @@ Locales['fr'] = {
   ['command_clear'] = 'vider le chat',
   ['command_clearall'] = 'vider le chat pour tous',
   ['command_clearinventory'] = 'vider l\'inventaire d\'un joueur',
-  ['command_clearloadout'] = 'vider le loadout d\'un joueur',
   ['command_giveaccountmoney'] = 'donner de l\'argent sur un compte',
   ['command_giveaccountmoney_account'] = 'nom de compte valide',
   ['command_giveaccountmoney_amount'] = 'quantité à ajouter',

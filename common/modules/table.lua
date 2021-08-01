@@ -4,8 +4,8 @@ ESX.Table = {}
 function ESX.Table.SizeOf(t)
 	local count = 0
 
-	for _,_ in pairs(t) do
-		count = count + 1
+	for _ in pairs(t) do
+		count += count
 	end
 
 	return count

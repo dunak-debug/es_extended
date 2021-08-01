@@ -5,13 +5,10 @@ for i = 65,  90 do table.insert(Charset, string.char(i)) end
 for i = 97, 122 do table.insert(Charset, string.char(i)) end
 
 ESX.GetRandomString = function(length)
-	math.randomseed(GetGameTimer())
-
 	if length > 0 then
 		return ESX.GetRandomString(length - 1) .. Charset[math.random(1, #Charset)]
-	else
-		return ''
 	end
+	return ''
 end
 
 ESX.GetConfig = function()

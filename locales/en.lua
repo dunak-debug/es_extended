@@ -61,7 +61,6 @@ Locales['en'] = {
   ['command_clear'] = 'clear chat',
   ['command_clearall'] = 'clear chat for all players',
   ['command_clearinventory'] = 'clear player inventory',
-  ['command_clearloadout'] = 'clear a player loadout',
   ['command_giveaccountmoney'] = 'give account money',
   ['command_giveaccountmoney_account'] = 'valid account name',
   ['command_giveaccountmoney_amount'] = 'amount to add',

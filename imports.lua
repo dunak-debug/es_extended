@@ -36,13 +36,11 @@ if IsDuplicityVersion() then
 ------------------------------------------------------------------------
 	-- Clear out unneccesary garbage that gets copied over
 	ESX.Items, ESX.Jobs, ESX.UsableItemsCallbacks = {}, {}, {}
-	ESX.ServerCallbacks, ESX.CancelledTimeouts, ESX.RegisteredCommands = nil, nil, nil
 
 ------------------------------------------------------------------------
 else -- CLIENT
 ------------------------------------------------------------------------
-	ESX.UI.Opened, ESX.UI.RegisteredTypes, ESX.ServerCallbacks, ESX.TimeoutCallbacks = nil, nil, nil, nil
-	ESX.PlayerData.inventory, ESX.PlayerData.loadout = {}, {}
+	ESX.UI.Opened, ESX.UI.RegisteredTypes, ESX.PlayerData.inventory = nil, nil, {}
 
 	AddEventHandler('esx:setPlayerData', function(key, val, last)
 		if GetInvokingResource() == 'es_extended' then

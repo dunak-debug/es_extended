@@ -61,7 +61,6 @@ Locales['br'] = {
   ['command_clear'] = 'limpar o chat',
   ['command_clearall'] = 'limpar o chat para todos',
   ['command_clearinventory'] = 'remover todos os itens do inventário',
-  ['command_clearloadout'] = 'remova todas as armas do carregamento',
   ['command_giveaccountmoney'] = 'dar dinheiro da conta',
   ['command_giveaccountmoney_account'] = 'conta',
   ['command_giveaccountmoney_amount'] = 'amount',

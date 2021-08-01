@@ -1,13 +1,13 @@
 ESX = {}
+Core = {}
+ESX.Jobs = {}
+ESX.Items = {}
 ESX.Players = {}
 ESX.UsableItemsCallbacks = {}
-ESX.Items = {}
-ESX.ServerCallbacks = {}
-ESX.TimeoutCount = -1
-ESX.CancelledTimeouts = {}
-ESX.Jobs = {}
-ESX.RegisteredCommands = {}
-Core = {}
+Core.TimeoutCount = -1
+Core.ServerCallbacks = {}
+Core.CancelledTimeouts = {}
+Core.RegisteredCommands = {}
 
 AddEventHandler('esx:getSharedObject', function(cb)
 	cb(ESX)

@@ -61,7 +61,6 @@ Locales['tc'] = {
   ['command_clear'] = '清除聊天紀錄',
   ['command_clearall'] = '清除所有玩家的聊天紀錄',
   ['command_clearinventory'] = '清除玩家背包',
-  ['command_clearloadout'] = '清除玩家人物造型',
   ['command_giveaccountmoney'] = '給予帳戶錢',
   ['command_giveaccountmoney_account'] = '有效的帳戶名稱',
   ['command_giveaccountmoney_amount'] = '添加的數量',

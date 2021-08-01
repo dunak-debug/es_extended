@@ -61,7 +61,6 @@ Locales['sv'] = {
   ['command_clear'] = 'töm chatten',
   ['command_clearall'] = 'töm chatten för alla spelare',
   ['command_clearinventory'] = 'töm en spelares inventory',
-  ['command_clearloadout'] = 'töm en spelares loadout',
   ['command_giveaccountmoney'] = 'ge pengar för ett konto',
   ['command_giveaccountmoney_account'] = 'giltigt kontonamn',
   ['command_giveaccountmoney_amount'] = 'mängd att ge',

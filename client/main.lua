@@ -1,6 +1,6 @@
-Citizen.CreateThread(function()
+CreateThread(function()
 	while not Config.Multichar do
-		Citizen.Wait(0)
+		Wait(0)
 		if NetworkIsPlayerActive(PlayerId()) then
 			exports.spawnmanager:setAutoSpawn(false)
 			DoScreenFadeOut(0)
@@ -18,7 +18,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 	FreezeEntityPosition(PlayerPedId(), true)
 
 	if Config.Multichar then
-		Citizen.Wait(3000)
+		Wait(3000)
 	else
 		exports.spawnmanager:spawnPlayer({
 			x = ESX.PlayerData.coords.x,
@@ -31,7 +31,6 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 			TriggerServerEvent('esx:onPlayerSpawn')
 			TriggerEvent('esx:onPlayerSpawn')
 			TriggerEvent('playerSpawned') -- compatibility with old scripts
-			TriggerEvent('esx:restoreLoadout')
 			if isNew then
 				if skin.sex == 0 then
 					TriggerEvent('skinchanger:loadDefaultModel', true)
@@ -46,7 +45,7 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 		end)
 	end
 
-	while ESX.PlayerData.ped == nil do Citizen.Wait(20) end
+	while ESX.PlayerData.ped == nil do Wait(20) end
 	-- enable PVP
 	if Config.EnablePVP then
 		SetCanAttackFriendly(ESX.PlayerData.ped, true, false)
@@ -101,10 +100,6 @@ end)
 AddEventHandler('esx:onPlayerDeath', function()
 	ESX.SetPlayerData('ped', PlayerPedId())
 	ESX.SetPlayerData('dead', true)
-end)
-
-AddEventHandler('esx:restoreLoadout', function()
-	ESX.SetPlayerData('ped', PlayerPedId())
 end)
 
 RegisterNetEvent('esx:setAccountMoney')
@@ -177,7 +172,7 @@ AddEventHandler('esx:deleteVehicle', function(radius)
 			local attempt = 0
 
 			while not NetworkHasControlOfEntity(entity) and attempt < 100 and DoesEntityExist(entity) do
-				Citizen.Wait(100)
+				Wait(100)
 				NetworkRequestControlOfEntity(entity)
 				attempt = attempt + 1
 			end
@@ -194,7 +189,7 @@ AddEventHandler('esx:deleteVehicle', function(radius)
 		end
 
 		while not NetworkHasControlOfEntity(vehicle) and attempt < 100 and DoesEntityExist(vehicle) do
-			Citizen.Wait(100)
+			Wait(100)
 			NetworkRequestControlOfEntity(vehicle)
 			attempt = attempt + 1
 		end
@@ -207,10 +202,10 @@ end)
 
 -- Pause menu disables HUD display
 if Config.EnableHud then
-	Citizen.CreateThread(function()
+	CreateThread(function()
 		local isPaused = false
 		while true do
-			Citizen.Wait(300)
+			Wait(300)
 
 			if IsPauseMenuActive() and not isPaused then
 				isPaused = true
@@ -251,7 +246,7 @@ AddEventHandler("esx:tpm", function()
                 break
             end
 
-            Citizen.Wait(5)
+            Wait(5)
         end
         TriggerEvent('chatMessage', "Successfully Teleported")
     else
@@ -279,9 +274,9 @@ AddEventHandler("esx:noclip", function(input)
 	end)
 	
 	local heading = 0
-	Citizen.CreateThread(function()
+	CreateThread(function()
 	while true do
-		Citizen.Wait(0)
+		Wait(0)
 
 		if(noclip)then
 			SetEntityCoordsNoOffset(ESX.PlayerData.ped, noclip_pos.x, noclip_pos.y, noclip_pos.z, 0, 0, 0)
@@ -320,7 +315,7 @@ AddEventHandler("esx:noclip", function(input)
 				noclip_pos = GetOffsetFromEntityInWorldCoords(ESX.PlayerData.ped, 0.0, 0.0, -1.0)
 			end
 		else
-			Citizen.Wait(200)
+			Wait(200)
 		end
 	end
 end)

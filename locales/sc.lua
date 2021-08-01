@@ -61,7 +61,6 @@ Locales['sc'] = {
   ['command_clear'] = '清除聊天记录',
   ['command_clearall'] = '清除所有玩家的聊天记录',
   ['command_clearinventory'] = '清除玩家库存',
-  ['command_clearloadout'] = '清除玩家皮肤',
   ['command_giveaccountmoney'] = '给帐户钱',
   ['command_giveaccountmoney_account'] = '有效的帐户名',
   ['command_giveaccountmoney_amount'] = '添加的数量',

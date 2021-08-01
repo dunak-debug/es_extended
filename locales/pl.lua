@@ -60,7 +60,6 @@ Locales['pl'] = {
   ['command_clear'] = 'wyczyść czat',
   ['command_clearall'] = 'wyczyść czat dla wszystkich graczy',
   ['command_clearinventory'] = 'wyczyść ekwipunek gracza',
-  ['command_clearloadout'] = 'wyczyść wyposarzenie gracza',
   ['command_giveaccountmoney'] = 'daj pieniądze na podany typ konta',
   ['command_giveaccountmoney_account'] = 'prawidłowy typ konta',
   ['command_giveaccountmoney_amount'] = 'ilość do dodania',

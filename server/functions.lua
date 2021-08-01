@@ -5,17 +5,17 @@ ESX.Trace = function(msg)
 end
 
 ESX.SetTimeout = function(msec, cb)
-	local id = ESX.TimeoutCount + 1
+	local id = Core.TimeoutCount + 1
 
 	SetTimeout(msec, function()
-		if ESX.CancelledTimeouts[id] then
-			ESX.CancelledTimeouts[id] = nil
+		if Core.CancelledTimeouts[id] then
+			Core.CancelledTimeouts[id] = nil
 		else
 			cb()
 		end
 	end)
 
-	ESX.TimeoutCount = id
+	Core.TimeoutCount = id
 
 	return id
 end
@@ -29,10 +29,10 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 		return
 	end
 
-	if ESX.RegisteredCommands[name] then
+	if Core.RegisteredCommands[name] then
 		print(('[^3WARNING^7] Command ^5"%s" already registered, overriding command'):format(name))
 
-		if ESX.RegisteredCommands[name].suggestion then
+		if Core.RegisteredCommands[name].suggestion then
 			TriggerClientEvent('chat:removeSuggestion', -1, ('/%s'):format(name))
 		end
 	end
@@ -44,10 +44,10 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 		TriggerClientEvent('chat:addSuggestion', -1, ('/%s'):format(name), suggestion.help, suggestion.arguments)
 	end
 
-	ESX.RegisteredCommands[name] = {group = group, cb = cb, allowConsole = allowConsole, suggestion = suggestion}
+	Core.RegisteredCommands[name] = {group = group, cb = cb, allowConsole = allowConsole, suggestion = suggestion}
 
 	RegisterCommand(name, function(playerId, args, rawCommand)
-		local command = ESX.RegisteredCommands[name]
+		local command = Core.RegisteredCommands[name]
 
 		if not command.allowConsole and playerId == 0 then
 			print(('[^3WARNING^7] ^5%s'):format(_U('commanderror_console')))
@@ -148,16 +148,16 @@ ESX.RegisterCommand = function(name, group, cb, allowConsole, suggestion)
 end
 
 ESX.ClearTimeout = function(id)
-	ESX.CancelledTimeouts[id] = true
+	Core.CancelledTimeouts[id] = true
 end
 
 ESX.RegisterServerCallback = function(name, cb)
-	ESX.ServerCallbacks[name] = cb
+	Core.ServerCallbacks[name] = cb
 end
 
 ESX.TriggerServerCallback = function(name, requestId, source, cb, ...)
-	if ESX.ServerCallbacks[name] then
-		ESX.ServerCallbacks[name](source, cb, ...)
+	if Core.ServerCallbacks[name] then
+		Core.ServerCallbacks[name](source, cb, ...)
 	else
 		print(('[^3WARNING^7] Server callback ^5"%s"^0 does not exist. ^1Please Check The Server File for Errors!^0'):format(name))
 	end
