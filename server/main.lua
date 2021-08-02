@@ -253,6 +253,7 @@ function loadESXPlayer(identifier, playerId, isNew)
 			inventory = xPlayer.getInventory(),
 			job = xPlayer.getJob(),
 			money = xPlayer.getMoney(),
+			name = xPlayer.getName(),
 			dead = false
 		}, isNew, userData.skin)
 
@@ -314,7 +315,8 @@ ESX.RegisterServerCallback('esx:getPlayerData', function(source, cb)
 		accounts     = xPlayer.getAccounts(),
 		inventory    = xPlayer.getInventory(),
 		job          = xPlayer.getJob(),
-		money        = xPlayer.getMoney()
+		money        = xPlayer.getMoney(),
+		name		 = xPlayer.getName()
 	})
 end)
 
@@ -326,7 +328,8 @@ ESX.RegisterServerCallback('esx:getOtherPlayerData', function(source, cb, target
 		accounts     = xPlayer.getAccounts(),
 		inventory    = xPlayer.getInventory(),
 		job          = xPlayer.getJob(),
-		money        = xPlayer.getMoney()
+		money        = xPlayer.getMoney(),
+		name         = xPlayer.getName()
 	})
 end)
 
