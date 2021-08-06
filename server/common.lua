@@ -45,6 +45,14 @@ exports('Items', function()
 	return ESX.Items
 end)
 
+exports('UsableItems', function()
+	local Usables = {}
+	for k, v in pairs(ESX.UsableItemsCallbacks) do
+		Usables[k] = true
+	end
+	return Usables
+end)
+
 Core.LoadJobs = function()
 	local Jobs = {}
 	local file = load(LoadResourceFile('es_extended', '/data/jobs.lua'))()
