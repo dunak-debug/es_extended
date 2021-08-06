@@ -1,3 +1,8 @@
+local Inventory
+AddEventHandler('ox_inventory:loadInventory', function(module)
+	Inventory = module
+end)
+
 function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, coords)
 	local self = {}
 
@@ -122,7 +127,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 			end
 			return inventory
 		end
-		return exports['linden_inventory']:getPlayerInventory(self, minimal)
+		return self.inventory
 	end
 
 	self.getJob = function()
@@ -145,7 +150,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 				local prevMoney = account.money
 				local newMoney = ESX.Math.Round(money)
 				account.money = newMoney
-				if accountName ~= 'bank' then exports['linden_inventory']:setInventoryItem(self, accountName, money) end
+				if accountName ~= 'bank' then Inventory.SetItem(self.source, accountName, money) end
 				self.triggerEvent('esx:setAccountMoney', account)
 			end
 		end
@@ -158,7 +163,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 			if account then
 				local newMoney = account.money + ESX.Math.Round(money)
 				account.money = newMoney
-				if accountName ~= 'bank' then exports['linden_inventory']:addInventoryItem(self, accountName, money) end
+				if accountName ~= 'bank' then Inventory.AddItem(self.source, accountName, money) end
 				self.triggerEvent('esx:setAccountMoney', account)
 			end
 		end
@@ -171,46 +176,47 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 			if account then
 				local newMoney = account.money - ESX.Math.Round(money)
 				account.money = newMoney
-				if accountName ~= 'bank' then exports['linden_inventory']:removeInventoryItem(self, accountName, money) end
+				if accountName ~= 'bank' then Inventory.RemoveItem(self.source, accountName, money) end
 				self.triggerEvent('esx:setAccountMoney', account)
 			end
 		end
 	end
   
 	self.getInventoryItem = function(name, metadata)
-		return exports['linden_inventory']:getInventoryItem(self, name, metadata)
+		return Inventory.GetItem(self.source, name, metadata)
 	end
   
 	self.addInventoryItem = function(name, count, metadata, slot)
-		exports['linden_inventory']:addInventoryItem(self, name, count, metadata, slot)
+		Inventory.AddItem(self.source, name, count, metadata, slot)
 	end
   
 	self.removeInventoryItem = function(name, count, metadata)
-		exports['linden_inventory']:removeInventoryItem(self, name, count, metadata)
+		Inventory.RemoveItem(self.source, name, count, metadata)
 	end
   
 	self.setInventoryItem = function(name, count, metadata)
-		exports['linden_inventory']:setInventoryItem(self, name, count, metadata)
+		Inventory.SetItem(self.source, name, count, metadata)
 	end
   
 	self.getWeight = function()
-		return exports['linden_inventory']:getWeight(self)
+		return self.weight
 	end
   
 	self.getMaxWeight = function()
-		return exports['linden_inventory']:getMaxWeight(self)
+		return self.maxWeight
 	end
   
 	self.canCarryItem = function(name, count)
-		return exports['linden_inventory']:canCarryItem(self, name, count)
+		return Inventory.CanCarryItem(self.source, name, count, metadata)
 	end
   
 	self.canSwapItem = function(firstItem, firstItemCount, testItem, testItemCount)
-		return exports['linden_inventory']:canSwapItem(self, firstItem, firstItemCount, testItem, testItemCount)
+		return Inventory.CanSwapItem(self.source, firstItem, firstItemCount, testItem, testItemCount)
 	end
   
 	self.setMaxWeight = function(newWeight)
-		return exports['linden_inventory']:setMaxWeight(self, newWeight)
+		self.maxWeight = newWeight
+		return exports.ox_inventory:Inventory(self.source):set('weight', newWeight)
 	end
 
 	self.setJob = function(job, grade)
@@ -255,24 +261,22 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 		self.triggerEvent('esx:showHelpNotification', msg, thisFrame, beep, duration)
 	end
 
-	self.syncInventory = function(money, dirty, inventory, weight, maxWeight)
-		local curMoney = self.getAccount('money').money
-		local curDirty = self.getAccount('black_money').money
-		money = ESX.Math.Round(money)
-		dirty = ESX.Math.Round(dirty)
-		if curMoney ~= money then
-			self.setAccountMoney('money', money)
+	self.syncInventory = function(weight, maxWeight, items, money)
+		self.weight, self.maxWeight = weight, maxWeight
+		for k, v in pairs(items) do
+			self.inventory[k] = v
 		end
-		if curDirty ~= dirty then
-			self.setAccountMoney('black_money', dirty)
+		for k, v in pairs(money) do
+			local account = self.getAccount(k)
+			if ESX.Math.Round(account.money) ~= v then
+				account.money = v
+				self.triggerEvent('esx:setAccountMoney', account)
+			end
 		end
-		self.inventory = inventory
-		self.weight = weight
-		self.maxWeight = maxWeight
 	end
   
 	self.getPlayerSlot = function(slot)
-		return exports['linden_inventory']:getPlayerSlot(self, slot)
+		return self.inventory[slot]
 	end
 
 	return self
