@@ -250,14 +250,13 @@ function loadESXPlayer(identifier, playerId, isNew)
 			accounts = xPlayer.getAccounts(),
 			coords = xPlayer.getCoords(),
 			identifier = xPlayer.getIdentifier(),
-			inventory = xPlayer.getInventory(),
 			job = xPlayer.getJob(),
 			money = xPlayer.getMoney(),
 			name = xPlayer.getName(),
 			dead = false
 		}, isNew, userData.skin)
 
-		TriggerEvent('linden_inventory:setPlayerInventory', xPlayer, userData.inventory)
+		TriggerEvent('ox_inventory:setPlayerInventory', xPlayer, userData.inventory)
 		xPlayer.triggerEvent('esx:registerSuggestions', Core.RegisteredCommands)
 		print(('[^2INFO^0] Player ^5"%s" ^0has connected to the server. ID: ^5%s^7'):format(xPlayer.getName(), playerId))
 	end)
