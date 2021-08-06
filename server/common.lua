@@ -33,7 +33,7 @@ AddEventHandler('esx:triggerServerCallback', function(name, requestId, ...)
 	end, ...)
 end)
 
-AddEventHandler('linden_inventory:loaded', function(data)
+AddEventHandler('ox_inventory:itemList', function(data)
 	ESX.Items = data
 end)
 
