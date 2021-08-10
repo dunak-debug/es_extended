@@ -1,6 +1,6 @@
-local Inventory
-AddEventHandler('ox_inventory:loadInventory', function(module)
-	Inventory = module
+local Inventory, Metatable = {}
+AddEventHandler('ox_inventory:loadInventory', function(module, metatable)
+	Inventory, Metatable = module, setmetatable(Inventory, metatable)
 end)
 
 function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, coords)
@@ -114,7 +114,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 		if minimal and next(self.inventory) then
 			local inventory = {}
 			for k, v in pairs(self.inventory) do
-				if v.count > 0 then
+				if v.count and v.count > 0 then
 					local metadata = v.metadata
 					if v.metadata and next(v.metadata) == nil then metadata = nil end
 					inventory[#inventory+1] = {
@@ -264,13 +264,15 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 	self.syncInventory = function(weight, maxWeight, items, money)
 		self.weight, self.maxWeight = weight, maxWeight
 		for k, v in pairs(items) do
-			self.inventory[k] = v
+			self.inventory[k] = v and v or nil
 		end
-		for k, v in pairs(money) do
-			local account = self.getAccount(k)
-			if ESX.Math.Round(account.money) ~= v then
-				account.money = v
-				self.triggerEvent('esx:setAccountMoney', account)
+		if money then
+			for k, v in pairs(money) do
+				local account = self.getAccount(k)
+				if ESX.Math.Round(account.money) ~= v then
+					account.money = v
+					self.triggerEvent('esx:setAccountMoney', account)
+				end
 			end
 		end
 	end
