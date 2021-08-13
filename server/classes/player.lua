@@ -1,6 +1,6 @@
-local Inventory, Metatable = {}
-AddEventHandler('ox_inventory:loadInventory', function(module, metatable)
-	Inventory, Metatable = module, setmetatable(Inventory, metatable)
+local Inventory
+AddEventHandler('ox_inventory:loadInventory', function(module)
+	Inventory = module
 end)
 
 function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, coords)
@@ -263,9 +263,7 @@ function CreateExtendedPlayer(playerId, identifier, group, accounts, job, name, 
 
 	self.syncInventory = function(weight, maxWeight, items, money)
 		self.weight, self.maxWeight = weight, maxWeight
-		for k, v in pairs(items) do
-			self.inventory[k] = v and v or nil
-		end
+		self.inventory = items
 		if money then
 			for k, v in pairs(money) do
 				local account = self.getAccount(k)
