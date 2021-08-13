@@ -144,7 +144,6 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 	if IsModelInCdimage(model) then
 		local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
 
-		TriggerEvent('esx:deleteVehicle')
 		ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
 			TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
 		end)
