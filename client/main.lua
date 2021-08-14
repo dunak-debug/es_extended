@@ -62,13 +62,13 @@ AddEventHandler('esx:playerLoaded', function(xPlayer, isNew, skin)
 
 		local gradeLabel = ESX.PlayerData.job.grade_label ~= ESX.PlayerData.job.label and ESX.PlayerData.job.grade_label or ''
 		if gradeLabel ~= '' then gradeLabel = ' - '..gradeLabel end
-		
+
 		ESX.UI.HUD.RegisterElement('job', #ESX.PlayerData.accounts, 0, jobTpl, {
 			job_label = ESX.PlayerData.job.label,
 			grade_label = gradeLabel
 		})
 	end
-	
+
 	local previousCoords = vector3(ESX.PlayerData.coords.x, ESX.PlayerData.coords.y, ESX.PlayerData.coords.z)
 	SetInterval(1, 2000, function()
 		local playerCoords = GetEntityCoords(ESX.PlayerData.ped)
@@ -144,7 +144,6 @@ AddEventHandler('esx:spawnVehicle', function(vehicle)
 	if IsModelInCdimage(model) then
 		local playerCoords, playerHeading = GetEntityCoords(ESX.PlayerData.ped), GetEntityHeading(ESX.PlayerData.ped)
 
-		TriggerEvent('esx:deleteVehicle')
 		ESX.Game.SpawnVehicle(model, playerCoords, playerHeading, function(vehicle)
 			TaskWarpPedIntoVehicle(ESX.PlayerData.ped, vehicle, -1)
 		end)
@@ -258,7 +257,7 @@ local noclip = false
 RegisterNetEvent("esx:noclip")
 AddEventHandler("esx:noclip", function(input)
     local player = PlayerId()
-	
+
     local msg = "disabled"
 	if(noclip == false)then
 		noclip_pos = GetEntityCoords(ESX.PlayerData.ped, false)
@@ -272,7 +271,7 @@ AddEventHandler("esx:noclip", function(input)
 
 	TriggerEvent("chatMessage", "Noclip has been ^2^*" .. msg)
 	end)
-	
+
 	local heading = 0
 	CreateThread(function()
 	while true do
